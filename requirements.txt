@@ -1,0 +1,12 @@
+# FastAPI Backend
+fastapi
+uvicorn
+pydantic
+
+# Machine Learning (TweetBERT)
+torch
+transformers
+pandas
+scikit-learn
+emoji
+accelerate>=1.1.0
