@@ -47,3 +47,23 @@ anyone else's. `cyhi render` turns it into `cyhi-logs/session.md` for submission
 
 Claude Code users: the `cyhi-skills` skill carries the full four-track brief.
 Everyone else: the track brief is in the hackathon problem statement.
+
+## Project rules
+
+Before changing code:
+1. Read docs/PROJECT_CONTEXT.md.
+2. Inspect the relevant existing files.
+3. Explain the implementation plan briefly.
+4. Do not modify unrelated files.
+
+After changing code:
+1. Run the relevant test/check.
+2. Inspect the git diff.
+3. Report what changed.
+4. Report anything not tested.
+
+Do not:
+- create duplicate architecture,
+- introduce frameworks without need,
+- replace trained models with LLM API calls,
+- modify another member's module without coordination.

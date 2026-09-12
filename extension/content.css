@@ -1,0 +1,11 @@
+.feed-shield-dev-status {
+  background: #18243f;
+  border-radius: 6px;
+  bottom: 12px;
+  color: #ffffff;
+  font: 12px/1.4 system-ui, sans-serif;
+  padding: 8px 10px;
+  position: fixed;
+  right: 12px;
+  z-index: 2147483647;
+}

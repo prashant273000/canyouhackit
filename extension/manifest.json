@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "AI Feed Shield",
+  "description": "Development skeleton for the AI Feed Shield browser extension.",
+  "version": "0.1.0",
+  "action": {
+    "default_title": "AI Feed Shield",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://localhost/*",
+        "http://127.0.0.1/*"
+      ],
+      "js": [
+        "universal-post.js",
+        "adapters/base-adapter.js",
+        "adapters/demo-adapter.js",
+        "parser.js",
+        "content.js"
+      ],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

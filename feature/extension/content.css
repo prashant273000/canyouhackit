@@ -1,0 +1,4 @@
+/* Reserved for non-invasive feed safety UI in later phases. */
+html[data-ai-feed-shield="ready"] {
+  --ai-feed-shield-extension-ready: 1;
+}

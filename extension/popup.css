@@ -1,0 +1,32 @@
+:root {
+  color: #18243f;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  min-width: 280px;
+}
+
+main {
+  padding: 16px;
+}
+
+h1 {
+  font-size: 18px;
+  margin: 0 0 8px;
+}
+
+button {
+  background: #365ec9;
+  border: 0;
+  border-radius: 4px;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 8px 10px;
+}
+
+#test-result {
+  line-height: 1.4;
+  margin-bottom: 0;
+}
