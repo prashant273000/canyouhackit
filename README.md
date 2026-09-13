@@ -1,88 +1,53 @@
-# 🛡️ AI Feed Shield
+# AI Feed Shield
 
-**AI Feed Shield** is a real-time, cross-browser extension and local AI backend that actively intercepts, analyzes, and neutralizes toxic content, hate speech, and harassment on social media feeds (specifically optimized for Twitter/X).
+## Overview
+AI Feed Shield is a personalized, real-time machine learning safety layer designed to protect users from toxic content and explicit imagery on social media platforms. Built for the Can You Hack It? Hackathon, this system intercepts incoming DOM elements on supported platforms (such as X/Twitter) and analyzes them using state-of-the-art Natural Language Processing (NLP) and Vision Transformers (ViT) before rendering them to the screen.
 
-Instead of relying on generic safety filters, AI Feed Shield is powered by a custom-trained **135M parameter BERTweet Transformer Model**, which was fully fine-tuned from scratch on 20,000 perfectly balanced toxic/safe interactions. 
+## System Architecture
 
----
+The architecture is divided into three primary components: the Client Extension, the Inference Backend, and the Hybrid Safety Pipeline.
 
-## 🏗️ Architecture Stack
-* **AI Model:** `vinai/bertweet-base` (Fully Fine-Tuned via Hugging Face `transformers` & PyTorch)
-* **Backend:** Python, FastAPI, Uvicorn
-* **Frontend:** Manifest V3 Browser Extension (Chrome & Firefox compatible)
-* **DOM Parsing:** Real-time React `MutationObserver` targeting `[data-testid]` hooks
+### 1. Client Architecture (Browser Extension)
+The frontend is a Manifest V3 cross-browser extension (Chrome and Firefox compatible) that operates directly on the DOM level.
+- **Platform Adapters:** The extension utilizes site-specific adapters (e.g., twitter_adapter.js) to locate feed elements, extract text and image URLs, and temporarily hide them by modifying CSS opacity while awaiting backend analysis.
+- **Dynamic UI Injection:** If content is flagged as unsafe, the extension reconstructs the DOM node into a native-looking platform warning. For example, on X, it injects a simulated "System Warning" styled identically to the platform's dark mode, obscuring the harmful content behind an interactive shield.
+- **Real-Time Configuration:** A popup control panel interfaces with chrome.storage.local to allow users to toggle text filtering, image filtering, or the master shield on and off in real-time.
 
----
+### 2. Backend Architecture (FastAPI)
+The backend is a high-performance, asynchronous Python server built on FastAPI. It acts as the orchestration layer between the client requests and the machine learning models.
+- **Smart Loading Mechanism:** To ensure instant boot times in offline or restricted environments, the server checks local directories (e.g., .safetensors files) before attempting to pull from the Hugging Face Hub.
+- **Endpoint Structure:** The API exposes dedicated endpoints for /analyze/text, /analyze/image, and /analyze/semantic, allowing the client to concurrently process different data modalities.
 
-## 🚀 Initial Setup & Installation
+### 3. Machine Learning Pipeline & Models
 
-To run AI Feed Shield locally, you need to start the AI Backend and load the Browser Extension.
+#### Text Toxicity Engine (BERTweet)
+The text analysis relies on a fine-tuned version of `vinai/bertweet-base`, a RoBERTa model pre-trained on English Tweets. 
+- **Training Architecture:** The model was trained using Full Fine-Tuning (FFT) rather than Low-Rank Adaptation (LoRA) to overcome catastrophic underfitting and mode collapse observed during early testing. 
+- **Classification Head:** It predicts four distinct labels: toxicity, hate, harassment, and abuse.
 
-### Prerequisites
-* Python 3.9 or higher
-* Google Chrome or Mozilla Firefox
+#### Hybrid Image Safety Engine
+Because lightweight, open-source Vision Transformers trained on human gore are highly restricted, the image safety layer employs a hybrid approach:
+- **Vision Transformer (ViT):** Pixel data is passed through `AdamCodd/vit-base-nsfw-detector`, a highly efficient model for identifying explicit nudity and pornography. 
+- **Semantic Heuristic Fallback:** Before visual inference, the backend scans image URLs and associated metadata for violent or explicit keywords. If a heuristic match is found, a high toxicity score is assigned.
+- **Max Pooling Resolution:** The final safety score is determined by the maximum value between the ViT inference score and the Semantic Heuristic score, preventing false negatives.
 
-### Step 1: Set up the Python Backend
-1. Clone this repository and navigate to the project directory:
-   ```bash
-   git clone <your-repo-url>
-   cd CanYouHackIt
-   ```
-2. Create and activate a Python virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-3. Install the required dependencies:
-   ```bash
-   pip install fastapi uvicorn torch transformers pydantic
-   ```
+## Deployment Strategy (The LocalTunnel Bypass)
+Due to severe RAM constraints on free-tier cloud platforms (which often limit containers to 512MB, causing Out-Of-Memory errors when loading ViT and RoBERTa models), the system utilizes a Local-Cloud hybrid deployment.
+- The heavy inference server runs natively on the presenter's host machine, utilizing the full hardware capacity.
+- A secure HTTPS tunnel (via localtunnel or ngrok) exposes the local port (8000) to the public internet.
+- This bypasses CORS restrictions and mixed-content blocking in the browser extension, allowing a flawless, zero-latency demonstration without requiring expensive cloud GPU hosting.
 
-### Step 2: Load the AI Model
-If you just finished training the model on Kaggle:
-1. Download your `final_tweetbert.zip` from Kaggle and extract it.
-2. Place the `model.safetensors`, `config.json`, and tokenizer files into the following directory:
-   ```text
-   CanYouHackIt/feature/toxicity/models/tweetbert/
-   ```
+## Installation & Setup
 
-### Step 3: Start the API Server
-Start the local FastAPI backend so the extension can communicate with the AI:
-```bash
-cd backend
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
-*The server is now listening for text payloads at `http://localhost:8000/analyze/text`.*
+### Backend Setup
+1. Navigate to the `backend` directory.
+2. Create and activate a virtual environment.
+3. Install dependencies: `pip install -r requirements.txt`
+4. Start the server: `python -m uvicorn main:app --reload`
+5. (Optional) Run `lt --port 8000` to expose the backend publicly.
 
-### Step 4: Install the Browser Extension
-
-**For Google Chrome:**
-1. Open Chrome and navigate to `chrome://extensions/`.
-2. Toggle **Developer mode** (top right corner).
-3. Click **Load unpacked** (top left).
-4. Select the `extension/` folder from this repository.
-
-**For Mozilla Firefox:**
-1. Open Firefox and navigate to `about:debugging`.
-2. Click **This Firefox** on the left sidebar.
-3. Click **Load Temporary Add-on...**.
-4. Select the `manifest.json` file inside the `extension/` folder.
-
----
-
-## 🧪 Testing on Twitter / X
-
-1. Ensure the Python backend is running.
-2. Open a new tab and go to [x.com](https://x.com).
-3. Scroll through your feed. The extension will silently scan every tweet in the background.
-4. **Trigger a Test:** Search for a highly controversial keyword or explicit profanity on Twitter. The moment the toxic tweets render, the AI will score them (Threshold > 0.3) and instantly replace the DOM node with a yellow **"Content Hidden"** safety shield.
-
----
-
-## 📚 Deep Dive Documentation
-If you are interested in the low-level Machine Learning mathematics and Extension Engineering that powers this project, check out our deep dive documentation:
-
-* [01. BERTweet & Tokenization Mechanics](docs/deep_dives/01_BERTWEET_AND_TOKENIZATION.md)
-* [02. LoRA Mechanics & Underfitting Diagnosis](docs/deep_dives/02_LORA_MECHANICS.md)
-* [03. Full Fine-Tuning & Resolving Mode Collapse](docs/deep_dives/03_FULL_FINE_TUNING.md)
-* [04. Manifest V3 Extension & DOM Interception Pipeline](docs/deep_dives/04_EXTENSION_ENGINEERING.md)
+### Extension Setup
+1. Open Google Chrome and navigate to `chrome://extensions/`.
+2. Enable "Developer mode" in the top right corner.
+3. Click "Load unpacked" and select the `extension` directory.
+4. For Firefox, navigate to `about:debugging#/runtime/this-firefox`, click "Load Temporary Add-on", and select the `manifest.json` file.
