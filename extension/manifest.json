@@ -9,19 +9,34 @@
     "scripting"
   ],
   "host_permissions": [
-    "http://localhost/*", "*://*.reddit.com/*"
+    "http://localhost/*", 
+    "*://*.reddit.com/*",
+    "*://*.twitter.com/*",
+    "*://*.x.com/*"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "scripts": ["background.js"]
   },
   "content_scripts": [
     {
-      "matches": ["http://localhost/*", "*://*.reddit.com/*"],
+      "matches": [
+        "http://localhost/*", 
+        "*://*.reddit.com/*",
+        "*://*.twitter.com/*",
+        "*://*.x.com/*"
+      ],
       "css": ["content.css"],
-      "js": ["content.js", "reddit_adapter.js"]
+      "js": ["content.js", "reddit_adapter.js", "twitter_adapter.js"]
     }
   ],
   "action": {
     "default_popup": "popup.html"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "aifeedshield@canyouhackit.org",
+      "strict_min_version": "109.0"
+    }
   }
 }
