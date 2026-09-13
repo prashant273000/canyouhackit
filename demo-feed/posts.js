@@ -33,14 +33,14 @@ const posts = [
     id: "p6",
     author: "Photographer",
     text: "Beautiful sunset today.",
-    image: "https://via.placeholder.com/400x200?text=Normal+Image",
+    image: "https://m.media-amazon.com/images/I/71mcnP83uOL._AC_UF894,1000_QL80_.jpg",
     type: "safe-image"
   },
   {
     id: "p7",
     author: "GorePoster",
     text: "Check out this gruesome accident scene.",
-    image: "https://via.placeholder.com/400x200?text=Graphic+Image+Placeholder",
+    image: "https://m.media-amazon.com/images/I/81kl8UctwsL._UF1000,1000_QL80_.jpg",
     type: "nsfw-graphic"
   },
   {

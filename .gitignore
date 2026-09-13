@@ -1,1 +1,5 @@
 feature/toxicity/models/tweetbert/model.safetensors
+feature/toxicity/models/
+feature/nsfw/models/
+venv/
+__pycache__/

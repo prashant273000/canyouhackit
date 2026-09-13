@@ -20,18 +20,24 @@ class TextResponse(BaseModel):
     abuse_score: float
     reason: str | None = None
 
-# Reverted back to use YOUR custom fine-tuned model
-MODEL_PATH = "../feature/toxicity/models/tweetbert"
+LOCAL_MODEL_PATH = "../feature/toxicity/models/tweetbert"
+HF_MODEL_PATH = "Prashant273013/AiFieldSheild"
 tokenizer = None
 model = None
 
-if os.path.exists(MODEL_PATH):
-    print("Loading custom fine-tuned Kaggle model into backend...")
+if os.path.exists(LOCAL_MODEL_PATH):
+    print("Loading custom model LOCALLY (Fast boot)...")
+    MODEL_PATH = LOCAL_MODEL_PATH
+else:
+    print(f"Local model not found. Downloading from Hugging Face: {HF_MODEL_PATH}")
+    MODEL_PATH = HF_MODEL_PATH
+
+try:
     tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH, normalization=True)
     model = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH)
     model.eval()
-else:
-    print("Warning: Custom model not found in feature/toxicity/models/tweetbert")
+except Exception as e:
+    print(f"Failed to load model: {e}")
 
 @router.post("/text", response_model=TextResponse)
 def analyze_text(request: TextRequest):
