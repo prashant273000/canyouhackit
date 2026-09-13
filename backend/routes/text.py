@@ -52,8 +52,9 @@ def analyze_text(request: TextRequest):
         scores["harassment"] = probs[2]
         scores["abuse"] = probs[3]
 
-        if request.parentText and any(w in request.parentText.lower() for w in ["idiot", "pathetic", "kill", "destroy"]):
-             scores["toxicity"] = min(1.0, scores["toxicity"] + 0.2)
+        text_to_check = (request.text + " " + (request.parentText or "")).lower()
+        if any(w in text_to_check  for w in ["idiot", "pathetic", "kill", "destroy", "fuck", "shit", "scum", "rapist"]):
+             scores["toxicity"] = 0.99
     
     is_safe = True
     reasons = []
