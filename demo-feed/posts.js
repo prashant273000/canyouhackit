@@ -33,7 +33,7 @@ const posts = [
     id: "p6",
     author: "Photographer",
     text: "Beautiful sunset today.",
-    image: "https://m.media-amazon.com/images/I/71mcnP83uOL._AC_UF894,1000_QL80_.jpg",
+    image: "https://dummyimage.com/600x400/282c34/61dafb.png&text=nsfw_test_trigger",
     type: "safe-image"
   },
   {

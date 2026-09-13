@@ -18,9 +18,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 async function handleAnalyzePost(post) {
   let is_safe = true;
   let reasons = [];
+  
+  const settings = await chrome.storage.local.get({
+    shield_master: true,
+    shield_text: true,
+    shield_image: true
+  });
+  
+  if (!settings.shield_master) {
+    return { id: post.id, is_safe: true, reason: null };
+  }
 
   // 1. Text Analysis
-  if (post.text) {
+  if (post.text && settings.shield_text) {
     try {
       const res = await fetch(`${BACKEND_URL}/analyze/text`, {
         method: 'POST',
@@ -35,26 +45,10 @@ async function handleAnalyzePost(post) {
     } catch (e) {
       console.warn("Text analysis failed:", e);
     }
-    
-    // Semantic mock
-    try {
-      const res = await fetch(`${BACKEND_URL}/analyze/semantic`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: post.id, text: post.text })
-      });
-      const data = await res.json();
-      if (!data.is_safe) {
-        is_safe = false;
-        reasons.push(data.reason);
-      }
-    } catch (e) {
-      console.warn("Semantic analysis failed:", e);
-    }
   }
 
   // 2. Image Analysis
-  if (post.images && post.images.length > 0) {
+  if (post.images && post.images.length > 0 && settings.shield_image) {
     try {
       const res = await fetch(`${BACKEND_URL}/analyze/image`, {
         method: 'POST',

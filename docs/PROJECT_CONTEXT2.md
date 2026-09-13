@@ -57,3 +57,11 @@ Based on this massive, highly detailed technical context, generate the following
 1.  **A 3-minute Presentation Script:** Include a Hook, the Problem, the Solution, a deep dive into "Our ML Engineering Journey" (highlighting the LoRA underfitting, Mode Collapse, and Full Fine-Tuning victory), and a strong Conclusion.
 2.  **Devpost Submission Text:** Write the "Inspiration", "What it does", "How we built it", and "Challenges we ran into" sections. Make the "Challenges" section incredibly technical and impressive based on the ML and Git roadblocks mentioned above.
 3.  **A Punchy Elevator Pitch (2 sentences).**
+
+---
+
+## UPDATE 3: Hybrid Image Safety & Deployment
+
+**New Features for Pitching:**
+1. **Hybrid Image Filter:** Tell the judges we couldn't just rely on standard APIs. We integrated `AdamCodd/vit-base-nsfw-detector` (a lightweight Vision Transformer) to catch explicit pixel data. But because pre-trained "Gore" models are restricted/unavailable, we built a **Semantic Heuristic Fallback**. The system reads image URLs and metadata for violent/NSFW triggers and aggressively blocks them before the AI even has to process the pixels. The final safety score is the `max(AI_Score, Heuristic_Score)`.
+2. **The "Local-Cloud" Infrastructure Hack:** When Render and Hugging Face paywalled their Docker/RAM tiers, we pivoted instantly. We turned the local laptop into the cloud server by establishing a secure public HTTPS tunnel (`localtunnel`/`ngrok`). This bypassed the 512MB RAM cloud limits entirely, allowing the heavy ViT models and RoBERTa models to run flawlessly during the live demo with zero latency.

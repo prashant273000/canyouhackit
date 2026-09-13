@@ -5,11 +5,49 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div class="container">
-    <h2>AI Feed Shield</h2>
-    <p>Safety layer is <span class="status">active</span>.</p>
-    <button id="test-btn">Test Connection</button>
-    <div id="log"></div>
+  <div class="x-popup">
+    <div class="header">
+      <svg viewBox="0 0 24 24" class="x-logo"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+      <h2>AI Feed Shield</h2>
+    </div>
+    
+    <div class="settings-list">
+      <div class="setting-item main-toggle">
+        <div class="setting-info">
+          <strong>Master Shield</strong>
+          <span>Enable all AI filtering</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="toggle-master" checked>
+          <span class="slider round"></span>
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <strong>Text Toxicity</strong>
+          <span>Block hate & harassment</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="toggle-text" checked>
+          <span class="slider round"></span>
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <strong>Image Safety</strong>
+          <span>Block explicit content</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="toggle-image" checked>
+          <span class="slider round"></span>
+        </label>
+      </div>
+    </div>
+    
+    
+    
   </div>
   <script src="popup.js"></script>
 </body>

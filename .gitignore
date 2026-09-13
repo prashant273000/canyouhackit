@@ -3,3 +3,11 @@ feature/toxicity/models/
 feature/nsfw/models/
 venv/
 __pycache__/
+
+# Extension build artifacts
+*.zip
+*.crx
+*.xpi
+
+# Node
+node_modules/

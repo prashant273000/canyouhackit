@@ -9,34 +9,53 @@
     "scripting"
   ],
   "host_permissions": [
-    "http://localhost/*", 
+    "http://localhost/*",
     "*://*.reddit.com/*",
     "*://*.twitter.com/*",
     "*://*.x.com/*"
   ],
   "background": {
     "service_worker": "background.js",
-    "scripts": ["background.js"]
+    "scripts": [
+      "background.js"
+    ]
   },
   "content_scripts": [
     {
       "matches": [
-        "http://localhost/*", 
+        "http://localhost/*",
         "*://*.reddit.com/*",
         "*://*.twitter.com/*",
         "*://*.x.com/*"
       ],
-      "css": ["content.css"],
-      "js": ["content.js", "reddit_adapter.js", "twitter_adapter.js"]
+      "css": [
+        "content.css"
+      ],
+      "js": [
+        "content.js",
+        "reddit_adapter.js",
+        "twitter_adapter.js"
+      ]
     }
   ],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
   },
   "browser_specific_settings": {
     "gecko": {
       "id": "aifeedshield@canyouhackit.org",
-      "strict_min_version": "109.0"
+      "strict_min_version": "109.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
     }
+  },
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
   }
 }

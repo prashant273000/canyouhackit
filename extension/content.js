@@ -53,9 +53,25 @@ function replaceWithWarning(post, reason) {
     const warningBox = document.createElement('div');
     warningBox.className = 'ai-warning-box';
     warningBox.innerHTML = `
-      <strong>Content Hidden</strong><br>
-      Reason: ${reason}<br>
-      <button class="ai-reveal-btn">Show Anyway</button>
+      <div class="x-warning-layout">
+        <div class="x-avatar-col">
+          <div class="x-avatar" style="display:flex;align-items:center;justify-content:center;background-color:#000;border:1px solid #333;"><svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:#fff;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg></div>
+        </div>
+        <div class="x-content-col">
+          <div class="x-header">
+            <span class="x-name">X</span>
+            <svg viewBox="0 0 24 24" class="x-verified"><g><path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.918-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.337 2.25c-.416-.165-.866-.25-1.336-.25-2.21 0-3.918 1.792-3.918 4 0 .495.084.965.238 1.4-1.273.65-2.148 2.02-2.148 3.6 0 1.46.74 2.746 1.867 3.45-.032.21-.047.424-.047.64 0 2.21 1.71 4 3.918 4 .61 0 1.187-.145 1.707-.408C9.645 21.575 10.762 22.5 12 22.5s2.355-.925 3.09-2.35c.52.263 1.097.408 1.707.408 2.21 0 3.918-1.79 3.918-4 0-.216-.015-.43-.047-.64 1.127-.704 1.867-1.99 1.867-3.45zm-11.46 5.826l-4.59-4.59 1.41-1.41 3.18 3.18 6.57-6.57 1.41 1.41-7.98 7.98z"></path></g></svg>
+            <span class="x-handle">@grok · System</span>
+          </div>
+          <div class="x-body">
+            This content was hidden by AI Field Shield to protect your feed.<br><br>
+            <span style="color: #71767b;">Flagged for:</span> <strong>${reason}</strong>
+          </div>
+          <div class="x-actions">
+            <button class="ai-reveal-btn">Show Anyway</button>
+          </div>
+        </div>
+      </div>
     `;
     warningBox.querySelector('.ai-reveal-btn').addEventListener('click', () => {
       showPost(post);
