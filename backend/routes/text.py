@@ -20,17 +20,18 @@ class TextResponse(BaseModel):
     abuse_score: float
     reason: str | None = None
 
+# Reverted back to use YOUR custom fine-tuned model
 MODEL_PATH = "../feature/toxicity/models/tweetbert"
 tokenizer = None
 model = None
 
 if os.path.exists(MODEL_PATH):
-    print("Loading TweetBERT model into backend...")
+    print("Loading custom fine-tuned Kaggle model into backend...")
     tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH, normalization=True)
     model = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH)
     model.eval()
 else:
-    print("Warning: TweetBERT model not found. Run train.py first.")
+    print("Warning: Custom model not found in feature/toxicity/models/tweetbert")
 
 @router.post("/text", response_model=TextResponse)
 def analyze_text(request: TextRequest):
@@ -45,19 +46,19 @@ def analyze_text(request: TextRequest):
         if not isinstance(probs, list):
             probs = [probs] * 4 # fallback if output shape is flat
             
+        # Update these indices if your Kaggle config.json has 7 labels instead of 4!
         scores["toxicity"] = probs[0]
         scores["hate"] = probs[1]
         scores["harassment"] = probs[2]
         scores["abuse"] = probs[3]
 
-        # Context-aware logic
         if request.parentText and any(w in request.parentText.lower() for w in ["idiot", "pathetic", "kill", "destroy"]):
              scores["toxicity"] = min(1.0, scores["toxicity"] + 0.2)
     
     is_safe = True
     reasons = []
     for label, score in scores.items():
-        if score > 0.5:
+        if score > 0.3:
             is_safe = False
             reasons.append(label)
             
